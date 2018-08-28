@@ -1,0 +1,64 @@
+var filter = {
+  numbercount: function (num) {
+    var num2 = parseInt(num)
+    if (num2>9999) {
+        return (Math.floor(num2/1000)/10) + '万+'
+    }else{
+        return num2
+    } 
+  },
+  getMin: function (obj) {
+    var time = parseInt(obj);
+    var min = Math.floor(time / 60) < 10 ? '0' + Math.floor(time / 60) : Math.floor(time / 60);
+    var s = time % 60 < 10 ? '0' + time % 60 : time % 60;
+    return min + ':' + s ;
+  },
+  getDateDiff: function (current_time,time) {
+    var publishTime = parseInt(time),
+      timeLag = parseInt(current_time) - publishTime,
+        lag_day,lag_hours,lag_min,lag_M,lag_Y;
+    lag_day = parseInt(timeLag / 86400);
+    lag_hours = parseInt(timeLag / 3600);
+    lag_min = parseInt(timeLag / 60);
+    lag_M = parseInt(timeLag / (86400*30));
+    lag_Y = parseInt(timeLag / (86400 * 365));
+    if (timeLag < 30) {
+      return '刚刚';
+    } else if (timeLag < 60 && timeLag > 30) {
+      return timeLag + '秒前';
+    } else if (timeLag >= 60 && lag_hours < 1){
+      return lag_min + '分钟前';
+    } else if (lag_hours >= 1 && lag_day < 1) {
+      return lag_hours + '小时前';
+    } else if (lag_day >= 1 && lag_M < 1) {
+      return lag_day + '天前';
+    } else if (lag_M >= 1 && lag_Y < 1) {
+      return lag_M + '月前';
+    } else if (lag_Y >= 1) {
+      return lag_Y + '年前';
+    }
+  }
+}
+var pushcolor = function (time) {
+  var colorsa = ['#B2EAE3', '#EAB2B2', '#EACAB2', '#BCEAB2', '#B2D3EA', '#C8B2EA', '#C8B2EA'];
+  var colorsb = ['#F0FBF9', '#FBF0F0', '#FBF4F0', '#F2FBF0', '#F0F6FB', '#F4F0FB', '#FBF0F7'];
+  var week = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+  var day = getDate(time).getDay();
+  return { a: colorsa[day], b: colorsb[day], c: week[day] }
+}
+var pushdate = function (time) {
+  return time.substring(2, time.length)
+}
+var Round = function (num) {
+  return Math.round(num)
+}
+module.exports = {
+  numbercount: filter.numbercount,
+  getDateDiff: filter.getDateDiff,
+  getMin: filter.getMin,
+  randomX: filter.randomX,
+  randomY: filter.randomY,
+  pushcolor: pushcolor,
+  pushdate: pushdate,
+  Round: Round
+}

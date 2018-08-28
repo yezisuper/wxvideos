@@ -1,0 +1,73 @@
+<wxs module="filter" src="../utils/numbercount.wxs"></wxs>
+<view class='navigationline'></view>
+<view style='{{showshare? "filter: blur(9rpx);-webkit-filter: blur(9rpx);":""}};margin-top:8rpx;'>
+	<view class="videoBox_list" >
+
+    	<video src="{{videosrc}}" wx:if="{{playIndex!=null  && !playshow}}" id="myVideo" bindended="end"  bindplay="hplay"  show-center-play-btn="true"  style="display:{{play?'none':'block'}};top:{{572*playIndex +90}}rpx" bindtimeupdate="update" autoplay="{{autoplay}}" class='video-sss'></video> 
+
+		<view class='videoBox' wx:for="{{videos}}"  wx:for-item="item" wx:key="{{index}}" > 
+      <view class='cover-view-pause' >{{item.coursename}}</view>
+			<view  class='videoBox_item'>
+			<!-- 	<video src="{{item.video}}" wx:if="{{playIndex == index && !playshow}}"  id="myVideo" bindended="end"  bindplay="hplay"  show-center-play-btn="true"  style="display:{{play?'none':'block'}}" bindtimeupdate="update" autoplay="{{autoplay}}" ></video> -->
+				<view class='cover-view' style="display:{{playIndex == index && !playshow? 'none' : 'flex' }};"> 
+					<image src='{{item.thumb}}' mode='aspectFill'  class="cover_view_fm"></image>
+					<image src="../../image/playvideo.png" mode='aspectFill'  style="display: {{playIndex == index? 'none' : 'flex' }};" class='play' id="myVideo-{{index}}"  data-playIndex="{{playIndex}}" data-videosrc="{{item.video}}"  data-videoid="{{item.id}}" bindtap='playvideo' data-index="{{index}}" data-videonum="{{item.readnum}}"/>
+				</view>
+				<view class="bfl_view" style="display: {{playIndex == index ? 'none' : 'flex' }};">
+					<view class="bfl_readnum">{{filter.numbercount(item.readnum)}}播放</view>
+					<view class="bfl_avinfo">{{filter.getMin(item.video_avinfo)}}</view> 
+				</view>
+				<view class='MBplay' data-playshow="{{playshow}}"  style="display: {{playIndex == index && playshow== true? 'block' : 'none' }};" >
+					<view>当前为非WiFi网络</view>
+					<view  class="MBplaybtn"  mode='aspectFill1'  data-playIndex="{{playIndex}}" data-playshow="{{playshow}}"  data-videoid="{{item.id}}"   bindtap='playvideoll' data-videosrc="{{item.video}}"   data-index="{{index}}" data-videonum="{{item.readnum}}">流量播放</view>					
+				</view>
+				<cover-view class='MBplay' wx:if="{{playIndex == index && jxplay}}" style="width: 100%;">
+					<cover-view>当前为非WiFi网络</cover-view>
+					<cover-view  class="MBplaybtn jxplay"  mode='aspectFill1'  data-playIndex="{{playIndex}}" data-playshow="{{playshow}}"  data-videoid="{{item.id}}"  data-videosrc="{{item.video}}"   bindtap='playvideoll' data-videonum="{{item.readnum}}" data-index="{{index}}">继续播放</cover-view>
+				</cover-view>
+			</view>
+			<view class="group_operate">
+				<view class="clike"  data-videoid="{{item.id}}" data-isadd="{{item.is_click?0:1}}"  data-index="{{index}}" data-num="{{item.clickrate}}" bindtap="videoclick">			
+					<image src="{{item.is_click == 0?'../../image/xinlike.png':'../../image/xinlikehover.png'}}"></image>
+					<view  class="clickratenum" style="{{item.is_click ==1?'color: #31D8C1':''}}">{{filter.numbercount(item.clickrate)}}</view>
+					<view class="{{clickindex == index?'like_ok on':'like_ok'}}">+1</view>					
+				</view>
+				<view class="collect" data-videoid="{{item.id}}" data-isadd="{{item.is_collect?0:1}}"  data-index="{{index}}" bindtap="videocollect">
+					<image src="{{item.is_collect == 0?'../../image/shoucang.png':'../../image/shoucanghover.png'}}"></image>
+				</view>
+				<view class="share" >
+					<image src="../../image/shareicon.png"  data-videoid="{{item.id}}" data-coursename ="{{item.coursename}}" data-thumb ="{{item.thumb}}" bindtap="videoshare" data-shareurl="{{item.share_url}}" data-sharename="{{item.share_name}}" data-introduction="{{item.introduction}}"></image>
+				</view>
+			</view>
+		</view>
+	</view>
+	</view>
+<!-- </scroll-view> -->
+	
+	<!-- 弹窗 -->
+	<view class="shareimagebigbox" wx:if="{{showshare}}" catchtouchmove='true'>
+		<view class="shareimagebox"  wx:if="{{!placardImgshow}}">
+			<image src="{{shareimg}}" class="shareimgtit" mode="aspectFill"></image>
+			<view class='articletitle'>{{sharetitle}}</view>
+			<view class="tipimg">
+			<view class="tipimg_item">
+				<button open-type="share"><image src="../../image/shareweixin.png" /></button>
+				<text>分享好友</text>
+			</view>
+			<view class="tipimg_item" bindtap="showbill">
+				<button bindtap="createplacard"><image src="../../image/imagesicon.png" /></button>
+				<text>制作海报</text>
+			</view>
+			</view>
+			<image src="../../image/deleteicon.png" class="delete" bindtap="delete"/>
+		</view>
+		<view class="shareimagebox" wx:if="{{placardImgshow}}" style='width:600rpx;height:712rpx;border-radius: 12rpx;'>
+			<image style='width:600rpx;height:712rpx;border-radius: 12rpx;' src="{{myCanvasimg}}"></image>
+			<image src="../../image/deleteicon.png" class="delete" bindtap="delete"/>
+		</view>
+	</view> 
+<!-- 分享卡片 5*4图-->
+<!-- 裁剪图 -->
+<canvas canvas-id='sharebtn' style='width:{{changeW}}px;height:{{syheight}}px;position:fixed;bottom:-9999999px;left:-99999999;'></canvas>
+<!-- 海报图 -->
+<canvas canvas-id='myCanvas' style='width:750px;height:928px;position:fixed;bottom:-9999999px;left:-99999999;'></canvas>
